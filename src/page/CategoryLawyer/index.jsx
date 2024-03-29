@@ -6,7 +6,7 @@ import { ListCategoryLawyer } from '../../component';
 
 
 const CategoryLawyer = () => {
-
+  let lawyerId = 'abcde';
   const navigate = useNavigate()
 
   const onPrev = e => {
@@ -16,7 +16,7 @@ const CategoryLawyer = () => {
 
   const chatLawyer = () => {
     console.log('tes mchat')
-    navigate('/lawyer/chat')
+    navigate(`/lawyer/${lawyerId}/chat`)
   }
 
 

@@ -3,10 +3,11 @@
 import { Avatar } from "antd";
 import { UserOutlined } from '@ant-design/icons';
 import RightChevron from '../../../uploads/right-chevron.png'
+import { createUUID } from "../../../util/UniqueKey";
 
 const ListMessages = ({ title, specialization, onCLick }) => {
   return (
-    <div className="category-lawyer flex justify-between items-center border-b-2 border-[#EEEEEE] py-5 cursor-pointer" onClick={onCLick}>
+    <div key={createUUID} className="category-lawyer flex justify-between items-center border-b-2 border-[#EEEEEE] py-5 cursor-pointer" onClick={onCLick}>
       <div className="category-lawyer-info flex">
         <div className="category-lawyer-avatar">
           <Avatar size={52} icon={<UserOutlined />} />

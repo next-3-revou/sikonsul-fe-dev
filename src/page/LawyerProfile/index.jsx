@@ -7,6 +7,7 @@ import { Buttons } from "../../component";
 import Breadcrumb from "../../layout/breadcrumb";
 
 const LawyerProfile = () => {
+  let lawyerId = 'abcde';
   const navigate = useNavigate()
 
   const onPrev = e => {
@@ -16,7 +17,7 @@ const LawyerProfile = () => {
 
   const chatLawyer = (e) => {
     e.preventDefault()
-    navigate('/lawyer/chat')
+    navigate(`/lawyer/${lawyerId}/chat`)
   }
 
   return (
