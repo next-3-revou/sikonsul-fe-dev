@@ -7,6 +7,7 @@ import {
   ref,
   onValue,
 } from "firebase/database";
+import { message } from "antd";
 
 const Messages = () => {
   const navigate = useNavigate()
@@ -14,7 +15,7 @@ const Messages = () => {
 
   const [messages, setMessages] = useState([]);
   const [mounted, setMounted] = useState(true);
-
+  const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     const urlMessages = `messages/${userId}`;
@@ -48,6 +49,11 @@ const Messages = () => {
           });
           setMessages(AllDataChat);
           setMounted(false);
+        } else{
+          messageApi.open({
+            type: 'error',
+            content: 'No Messages',
+          })
         }
       })
     }
@@ -61,29 +67,29 @@ const Messages = () => {
   }
 
   return (
-    <Master type={"navbar"}>
-      <div className="content px-4">
-        <div className="content-title pt-4 pb-2">
-          <h2 className="text-black text-left text-2xl">Messages</h2>
-        </div>
-        {messages.length > 0 &&
-          messages.map((cur, key) => {
-            return (
-              <ListMessages key={key} title={cur.data[2].data} specialization={cur.data[1].data} onCLick={(e) => chatLawyer(e, cur.data[5].data)} />
-            )
-          })
-
-        }
-        
-        {messages.length === 0 &&
-          <div className="warning py-5">
-            <h2 className="text-black text-xl">No Message</h2>
+    <>
+     {contextHolder}
+      <Master type={"navbar"}>
+        <div className="content px-4">
+          <div className="content-title pt-4 pb-2">
+            <h2 className="text-black text-left text-2xl">Messages</h2>
           </div>
-        }
-        
-
-      </div>
-    </Master>
+          {messages.length > 0 &&
+            messages.map((cur, key) => {
+              return (
+                <ListMessages key={key} title={cur.data[2].data} specialization={cur.data[1].data} onCLick={(e) => chatLawyer(e, cur.data[5].data)} />
+              )
+            })
+          }
+          
+          {messages.length === 0 &&
+            <div className="warning py-5">
+              <h2 className="text-black text-xl">No Message</h2>
+            </div>
+          }
+        </div>
+      </Master>
+    </>
   )
 }
 
