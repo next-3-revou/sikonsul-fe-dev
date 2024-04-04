@@ -12,7 +12,7 @@ const Navbar = () => {
 
 	const Home = (e) => { 
 		e.preventDefault();
-		navigate('/dashboard')
+		navigate('/')
 	}
 
 	const Message = (e) => {
@@ -25,10 +25,6 @@ const Navbar = () => {
 		navigate('/profile')
 	}
 
-	// const historyPage = (e) => {
-	// 	e.preventDefault();
-	// 	console.log('history')
-	// }
 
 	return (
     <>

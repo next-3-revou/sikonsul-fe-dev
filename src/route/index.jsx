@@ -15,12 +15,6 @@ export const PublicRoutes = () => {
           <Route path='/' element={<Front />} />
           <Route path='/signin' element={<SignIn />} />
           <Route path='/signup' element={<SignUp />} />
-          <Route path='/dashboard' element={<Dashboard />} /> 
-          <Route path='/message' element={<Messages />} />
-          <Route path='/profile' element={<UserProfile />} />          
-          <Route path='/lawyer/:lawyerId/chat' element={<Chats />} />         
-          <Route path='/lawyer/category' element={<CategoryLawyer />} />
-          <Route path='/lawyer/profile' element={<LawyerProfile />} />
           <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
   );
@@ -29,7 +23,12 @@ export const PublicRoutes = () => {
 export const PrivateRoutes = () => {
   return (
       <Routes>
-          <Route path='/' element={<Front />} />
+          <Route path='/' element={<Dashboard />} />
+          <Route path='/message' element={<Messages />} />
+          <Route path='/profile' element={<UserProfile />} />          
+          <Route path='/lawyer/:lawyerId/chat' element={<Chats />} />         
+          <Route path='/lawyer/category' element={<CategoryLawyer />} />
+          <Route path='/lawyer/profile' element={<LawyerProfile />} />
           <Route path='*' element={<Navigate to='/' replace />} />
       </Routes>
   );
