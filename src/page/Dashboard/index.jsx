@@ -1,9 +1,10 @@
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {News, Sliders, TopRatedLawyer, Users} from "../../component"
 import Master from "../../layout/master"
 import axios from "axios";
 import { Spin, message } from 'antd';
-import { useEffect, useState, useCallback } from 'react';
+
 
 const URL_NEWS = import.meta.env.VITE_BE_ENDPOINT_NEWS
 

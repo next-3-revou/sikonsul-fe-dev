@@ -3,7 +3,6 @@
 import { ListNews } from '../../../component'
 
 const News = ({datas}) => {
-  console.log(datas)
   return (
     <div className="content-section">
       <div className="content-title pb-6">
