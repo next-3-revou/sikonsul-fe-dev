@@ -6,9 +6,12 @@ import Master from '../../layout/master';
 import { Buttons } from '../../component';
 import { useNavigate } from 'react-router-dom';
 import Breadcrumb from '../../layout/breadcrumb';
+import { useState } from 'react';
 
 const SignUp = () => {
   const navigate = useNavigate()
+
+  const [isNotif, setIsNotif] = useState(false)
 
   const initialValues = {
     fullname: '',
@@ -34,7 +37,12 @@ const SignUp = () => {
   })
 
   const handleSignUp = async values => {
-    navigate('/dashboard')
+    setIsNotif(true)
+    setTimeout(() => {
+      setIsNotif(false)
+      navigate('/dashboard')
+
+    }, '2000');
   }
 
   const formMik = useFormik({
@@ -44,7 +52,7 @@ const SignUp = () => {
   })
 
   return (
-    <Master>
+    <Master isNotif={isNotif} textNotif={"Sign Up Success"} bgNotif={"bg-[#0BCAD4]"}>
       <div className="content flex flex-col px-4">
         <Breadcrumb title={"Signup Account"} onClick={e => onPrev(e)} />
         <div className="content-form mt-48">

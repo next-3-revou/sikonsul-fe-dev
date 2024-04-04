@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
 
 import Navbar from '../navbar'
+import Notifications from '../notification'
 import './styles.css'
 
-const Master = ({children, type}) => {
+const Master = ({children, type, isNotif, textNotif, bgNotif}) => {
   return (
     <>
 		<main className="bg-gray-200">
@@ -14,7 +15,10 @@ const Master = ({children, type}) => {
 				>
 					<section className="flex h-full flex-col">
 						<div className={`container flex h-full flex-col pb-8 pt-6`}>
-							<div className={`flex h-full flex-col ${type === 'front' ? 'justify-end' : ''}`}>							
+							<div className={`flex h-full flex-col ${type === 'front' ? 'justify-end' : ''}`}>
+								{ isNotif &&
+									<Notifications textNotif={textNotif} bgColor={bgNotif} animate={isNotif}/>
+								}
 								{children}
 								{type === 'navbar' &&
 									<Navbar />

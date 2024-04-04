@@ -84,3 +84,7 @@ button:focus-visible {
   margin-top: 0.5rem;
   margin-bottom: 2.5rem;
 }
+
+.animate {
+  transition: transform 1s ease-in-out;
+}

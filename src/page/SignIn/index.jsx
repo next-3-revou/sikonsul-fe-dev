@@ -1,4 +1,4 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 // import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
@@ -9,6 +9,8 @@ import Breadcrumb from '../../layout/breadcrumb';
 
 const SignIn = () => {
   const navigate = useNavigate()
+
+  const [isNotif, setIsNotif] = useState(false)
   // const [messageApi, contextHolder] = message.useMessage();
 
 	// const [loading, setLoading] = useState(false)
@@ -30,8 +32,12 @@ const SignIn = () => {
   })
 
   const handleLogin = async values => {
-    console.log(values)
-    navigate('/dashboard')
+    setIsNotif(true)
+    setTimeout(() => {
+      setIsNotif(false)
+      navigate('/dashboard')
+
+    }, '2000');
   }
 
   const formMik = useFormik({
@@ -41,7 +47,7 @@ const SignIn = () => {
   })
 
   return (
-    <Master>
+    <Master isNotif={isNotif} textNotif={"Sign In Success"} bgNotif={"bg-[#0BCAD4]"}>
       <div className="content flex flex-col px-4">
         <Breadcrumb title={"Sign in and Start Consultation"} onClick={e => onPrev(e)} />
         <div className="content-form mt-48">

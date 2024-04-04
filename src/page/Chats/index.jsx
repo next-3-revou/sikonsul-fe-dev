@@ -2,7 +2,8 @@
 // import React from 'react'
 import { 
   useEffect, 
-  useState 
+  useState,
+  useRef 
 } from "react";
 import {
   ref,
@@ -24,16 +25,25 @@ const Chats = () => {
   let { lawyerId } = useParams();
   let userId = 'abcd';
   const navigate = useNavigate()
+  const refChat = useRef(null);
+
 
   const [chatContent, setChatContent] = useState("");
   const [chats, setChats] = useState([]);
   const [mounted, setMounted] = useState(true);
+  const [isNotif, setIsNotif] = useState(false)
+
+  const scrollToLast = () => {
+    const lastChildElement = refChat.current?.lastElementChild;
+    lastChildElement?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     
     const chatIds = `${userId}_${lawyerId}`;  
     const urlChatting = `chatting/${chatIds}/allChat`;
     const refChatting = ref(DB, urlChatting);
+
     if(mounted) {
       onValue(refChatting, async (snapshot) => {
         const data = snapshot.val();
@@ -60,9 +70,14 @@ const Chats = () => {
   
           setChats(AllDataChat);
           setMounted(false);
+
         }
+        
       })
+
     }
+    scrollToLast()
+
   })
 
   const sendChats = (e) => {
@@ -120,6 +135,21 @@ const Chats = () => {
       setMounted(false);
     }
   }
+
+  const handleEnter = event => {
+    if (event.keyCode === 13 && event.shiftKey == false) {
+      if(chatContent.length <= 0) {
+        setIsNotif(true)
+        setTimeout(() => {
+          setIsNotif(false)
+  
+        }, '2000');
+      } else {
+        sendChats(event)
+      }
+      
+    }
+  }
   
 
   const onPrev = e => {
@@ -128,12 +158,12 @@ const Chats = () => {
   }
 
   return (
-    <Master>
+    <Master isNotif={isNotif} textNotif={"Please type your message"} bgNotif={"bg-rose-500"}>
       <div className="content h-full px-4">
         <Breadcrumb type={"chat"} title={"Tes"} onClick={e => onPrev(e)}/>
         <div className="chat-wrapper h-full">
           <div className="chat-elem h-full flex flex-col justify-between">
-            <div className="chat-content h-full mt-4 overflow-y-auto">
+            <div className="chat-content h-full mt-4 overflow-y-auto" ref={refChat}>
               {chats.map((cur, parentKey) => (
                 <div key={parentKey}>
                   <h6 className="text-center my-4 text-gray-500 dark:text-gray-300">
@@ -149,7 +179,7 @@ const Chats = () => {
                   )}
                 </div>
               ))}
-
+              <div ref={refChat} />
             </div>
             <div className="chat-input flex justify-around">
               <div className="chats-area">
@@ -160,11 +190,18 @@ const Chats = () => {
                   rows={1} 
                   cols={40}
                   className="resize-none rounded-md text-black overflow-hidden"
+                  onKeyDown={(e) => handleEnter(e)}
                 >
                 </textarea>
               </div>
               <div className="chat-btn mb-4">
-                <Button type="primary" icon={<EnterOutlined />} className="w-12 h-10" onClick={(e) => sendChats(e)} />
+                {chatContent.length <= 0 &&
+                  <Button type="primary" icon={<EnterOutlined />} className="w-12 h-10" onClick={(e) => sendChats(e)} disabled  />
+                }
+                {chatContent.length > 0 &&
+                  <Button type="primary" icon={<EnterOutlined />} className="w-12 h-10" onClick={(e) => sendChats(e)} onKeyDown={() => handleEnter()} />
+                }
+                
               </div>
             </div>
           </div>
