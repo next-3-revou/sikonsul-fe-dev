@@ -2,7 +2,8 @@
 // import React from 'react'
 import { 
   useEffect, 
-  useState 
+  useState,
+  useRef
 } from "react";
 import {
   ref,
@@ -13,8 +14,8 @@ import {
 import { DB } from "../../config";
 import { useNavigate, useParams } from 'react-router-dom';
 import Master from "../../layout/master"
-import { Button } from 'antd';
-import { EnterOutlined } from '@ant-design/icons';
+import { Button, message } from 'antd';
+import { SendOutlined } from '@ant-design/icons';
 import './styles.css'
 import Breadcrumb from "../../layout/breadcrumb";
 import { chatDate, chatTime } from "../../util/DateTime";
@@ -25,9 +26,16 @@ const Chats = () => {
   let userId = 'abcd';
   const navigate = useNavigate()
 
+  const [messageApi, contextHolder] = message.useMessage();
   const [chatContent, setChatContent] = useState("");
   const [chats, setChats] = useState([]);
   const [mounted, setMounted] = useState(true);
+
+  const AlwaysScrollToBottom = () => {
+    const elementRef = useRef();
+    useEffect(() => elementRef.current.scrollIntoView({ behavior: "smooth" }));
+    return <div ref={elementRef} />;
+  };
 
   useEffect(() => {
     
@@ -65,7 +73,7 @@ const Chats = () => {
     }
   })
 
-  const sendChats = (e) => {
+  const sendChats = (e) => { 
     e.preventDefault()
     setMounted(true);
 
@@ -114,64 +122,92 @@ const Chats = () => {
         
       })
       .catch(err => {
-        console.log(err)
+        messageApi.open({
+          type: 'error',
+          content: err.message,
+        })
       });
     } catch (error) {
       setMounted(false);
+      messageApi.open({
+        type: 'error',
+        content: error.message,
+      })
     }
   }
-  
 
+  const onEnterPress = (e) => {
+    if(e.keyCode == 13 && e.shiftKey == false) {
+      if(chatContent.length <= 0) {
+        messageApi.open({
+          type: 'error',
+          content: `Message can't be blank`,
+        })
+      } else {
+        sendChats(e)
+      }
+    }
+  }  
+  
   const onPrev = e => {
     e.preventDefault()
     navigate(-1)
   }
 
   return (
-    <Master>
-      <div className="content h-full px-4">
-        <Breadcrumb type={"chat"} title={"Tes"} onClick={e => onPrev(e)}/>
-        <div className="chat-wrapper h-full">
-          <div className="chat-elem h-full flex flex-col justify-between">
-            <div className="chat-content h-full mt-4 overflow-y-auto">
-              {chats.map((cur, parentKey) => (
-                <div key={parentKey}>
-                  <h6 className="text-center my-4 text-gray-500 dark:text-gray-300">
-                    {cur.date}
-                  </h6>
-                  {cur.data.map((current, childKey) =>
-                    current.data.sendBy == userId ? (
-                     
-                      <ListChats key={childKey} chatContent={current.data.chatContent} chatDate={current.data.chatDate} type="isMe"/>
-                    ) : (
-                      <ListChats key={childKey} chatContent={current.data.chatContent} chatDate={current.data.chatDate} type="isLawyer"/> 
-                    )
-                  )}
-                </div>
-              ))}
-
-            </div>
-            <div className="chat-input flex justify-around">
-              <div className="chats-area">
-                <textarea 
-                  placeholder="Type your message"
-                  value={chatContent}
-                  onChange={(e) => setChatContent(e.target.value)}
-                  rows={1} 
-                  cols={40}
-                  className="resize-none rounded-md text-black overflow-hidden"
-                >
-                </textarea>
+    <>
+      {contextHolder}
+      <Master>
+        <div className="content h-full px-4">
+          <Breadcrumb type={"chat"} title={"Tes"} onClick={e => onPrev(e)}/>
+          <div className="chat-wrapper h-full">
+            <div className="chat-elem h-full flex flex-col justify-between">
+              <div className="chat-content h-full mt-4 overflow-y-auto">
+                {chats.map((cur, parentKey) => (
+                  <div key={parentKey}>
+                    <h6 className="text-center my-4 text-gray-500 dark:text-gray-300">
+                      {cur.date}
+                    </h6>
+                    {cur.data.map((current, childKey) =>
+                      current.data.sendBy == userId ? (
+                      
+                        <ListChats key={childKey} chatContent={current.data.chatContent} chatDate={current.data.chatDate} type="isMe"/>
+                      ) : (
+                        <ListChats key={childKey} chatContent={current.data.chatContent} chatDate={current.data.chatDate} type="isLawyer"/> 
+                      )
+                    )}
+                  </div>
+                ))}
+                <AlwaysScrollToBottom />
               </div>
-              <div className="chat-btn mb-4">
-                <Button type="primary" icon={<EnterOutlined />} className="w-12 h-10" onClick={(e) => sendChats(e)} />
+              <div className="chat-input flex justify-around">
+                <div className="chats-area">
+                  <textarea 
+                    placeholder="Type your message"
+                    value={chatContent}
+                    onChange={(e) => setChatContent(e.target.value)}
+                    onKeyDown={(e) => onEnterPress(e)}
+                    rows={1} 
+                    cols={40}
+                    className="resize-none rounded-md text-black overflow-hidden"
+                  >
+                  </textarea>
+                </div>
+                <div className="chat-btn mb-4">
+                  {chatContent.length <= 0 && chatContent === "" &&
+                    <Button type="primary" icon={<SendOutlined />} className="w-12 h-10" onClick={(e) => sendChats(e)} disabled />
+                  }
+                  {chatContent.length > 0 &&
+                    <Button type="primary" icon={<SendOutlined />} className="w-12 h-10" onClick={(e) => sendChats(e)} />
+                  }                
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-    </Master>
+      </Master>    
+    </>
   )
 }
 
