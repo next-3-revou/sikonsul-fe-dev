@@ -22,7 +22,7 @@ const SignUp = () => {
     name: '',
     email: '',
     NIK: '',
-    // occupation: '',
+    occupation: '',
     password: ''
   }
 

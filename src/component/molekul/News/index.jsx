@@ -1,7 +1,7 @@
 import React from 'react'
 import { ListNews } from '../../../component'
 
-const News = () => {
+const News = ({data}) => {
   return (
     <div className="content-section">
       <div className="content-title pb-6">
