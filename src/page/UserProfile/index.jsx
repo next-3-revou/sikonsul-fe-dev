@@ -1,45 +1,34 @@
-import { useEffect, useState } from 'react';
-import axios from "axios";
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { Avatar } from "antd";
 import { UserOutlined } from '@ant-design/icons';
 import Master from "../../layout/master"
+import { ListProfiles } from '../../component';
+import { clearData } from '../../util/LocalStorage';
 import { message } from 'antd';
 
-const URL_PROFILE = import.meta.env.VITE_BE_ENDPOINT_PROFILE
-
 const UserProfile = () => {
+  const profile = useSelector(state => state.profiles.profile);
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
 
-  const [data, setData] = useState([])
   const [messageApi, contextHolder] = message.useMessage();
-  const [load, setLoad] = useState(true)
-  
-  const getProfile = async () => {
-    const tokens = JSON.parse(localStorage.getItem('accessToken'));
-    try {
-			const res = await axios.get(`${URL_PROFILE}`, {
-				headers: {
-					Authorization: `Bearer ${tokens}`,
-					'Content-Type': 'application/json',
-				}
-			})
-      if(res.status === 200) {
-        setLoad(false)
-        setData(res.data.data)
-      }
-    } catch (error) {
-      setLoad(false)
-      messageApi.open({
-        type: 'error',
-        content: error.message,
-      })
-    }
-  }
 
-  useEffect(() => {
-    if (load) {
-      getProfile()      
-    }
-  })
+  const logout = (e) => {
+    e.preventDefault()
+    clearData('accessToken')
+    clearData('userId')
+
+    messageApi.open({
+      type: 'success',
+      content: "Success SignOut",
+    })
+
+    setTimeout(() => {
+      dispatch({type: 'CLEAR_TOKEN'})
+      navigate('/',{ replace: true })
+    }, '2000');
+  }
 
   return (
     <>
@@ -53,7 +42,7 @@ const UserProfile = () => {
                   <Avatar size={145} icon={<UserOutlined />} />
                 </div>
                 <div className="lawyer-profile-info-detail-identity">
-                  <h2 className="text-black text-xl text-center font-semibold">{data.name}</h2>
+                  <h2 className="text-black text-xl text-center font-semibold">{profile.name}</h2>
                   <h2 className="text-[#7D8797] text-base text-center">Backend Engineer</h2>
                 </div>
               </div>
@@ -69,7 +58,7 @@ const UserProfile = () => {
                     <input
                       className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                       type="text"
-                      value={data.NIK}
+                      value={profile.nik}
                       disabled={true}
                     />
                   </div>
@@ -83,7 +72,7 @@ const UserProfile = () => {
                     <input
                       className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                       type="text"
-                      value={data.name}
+                      value={profile.name}
                       disabled={true}
                     />
                   </div>
@@ -100,8 +89,9 @@ const UserProfile = () => {
                       value={"Backend Engineer"}
                       disabled={true}
                     />
-                  </div>                       
+                  </div>
                 </div>
+                <ListProfiles title={"Signout"} onCLick={(e) => logout(e)} />
               </div>
             </div>
           </div>

@@ -12,6 +12,8 @@ function App() {
     const items = JSON.parse(localStorage.getItem('accessToken'));
     if(items) {
       setStatus(true) 
+    } else if(tokenizer === undefined ) {
+      setStatus(false)
     }
   }, [tokenizer])
 
