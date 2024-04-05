@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import {News, Sliders, TopRatedLawyer, Users} from "../../component"
 import Master from "../../layout/master"
 import axios from "axios";
@@ -7,9 +8,12 @@ import { Spin, message } from 'antd';
 
 
 const URL_NEWS = import.meta.env.VITE_BE_ENDPOINT_NEWS
+const URL_PROFILE = import.meta.env.VITE_BE_ENDPOINT_PROFILE
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const profile = useSelector(state => state.profiles.profile);
 
   const [load, setLoad] = useState(false)
   const [data, setData] = useState([])
@@ -32,6 +36,35 @@ const Dashboard = () => {
     }
   }, [])
 
+  const checkGlobalStates = useCallback( async () => {
+    if(profile.id === null || profile.id === '') {
+      const tokens = JSON.parse(localStorage.getItem('accessToken'));
+      try {
+        const res = await axios.get(`${URL_PROFILE}`, {
+          headers: {
+            Authorization: `Bearer ${tokens}`,
+            'Content-Type': 'application/json',
+          }
+        })
+        if(res.status === 200) {
+          setLoad(false)
+          dispatch({type: 'ADD_PROFILE', payload: res.data.data})
+        }
+      } catch (error) {
+        setLoad(false)
+        messageApi.open({
+          type: 'error',
+          content: error.message,
+        })
+      }
+    }
+  }, [])
+
+
+  useEffect(() => { 
+    checkGlobalStates()
+  }, [])
+
   useEffect(() => {
     getNew()
   }, [getNew])  
@@ -47,13 +80,12 @@ const Dashboard = () => {
     navigate('/lawyer/category')
   }
 
-
   return (
     <>
       {contextHolder}
       <Master type={"navbar"}>
         <div className="content px-4 overflow-y-auto h-full">
-          <Users name={"Kekeyi"} job={"Backend Engineer"}/>
+          <Users name={profile.name} job={"Backend Engineer"}/>
           <Sliders onCLick={e => lawyerCategory(e)} />
           <TopRatedLawyer onClick={e => lawyerProfile(e)} />
           <News datas={data} />

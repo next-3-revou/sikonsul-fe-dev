@@ -19,9 +19,9 @@ export const getData =  key => {
 	}
 };
 
-export const clearData = async key => {
+export const clearData =  key => {
 	try {
-		await localStorage.clear();
+		localStorage.clear();
 	} catch (e) {
 		console.log(e);
 	}
