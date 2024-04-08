@@ -5,6 +5,7 @@ const initialState = {
     email: '',
     nik: '',  
     occupation: '',
+    isPremium: ''
   }
 
 };
@@ -21,6 +22,7 @@ const profileReducer = (state = initialState, action) => {
           email: action.payload.email,
           nik: action.payload.NIK,
           occupation: action.payload.occupation,
+          isPremium: action.payload.isPremium,
         },
       };
 

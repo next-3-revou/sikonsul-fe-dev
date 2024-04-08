@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {News, Sliders, TopRatedLawyer, Users} from "../../component"
 import Master from "../../layout/master"
 import axios from "axios";
-import { Spin, message } from 'antd';
+import { Spin, message, Modal } from 'antd';
+import { clearData } from '../../util/LocalStorage';
 
 
 const URL_NEWS = import.meta.env.VITE_BE_ENDPOINT_NEWS
@@ -15,6 +16,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const profile = useSelector(state => state.profiles.profile);
 
+  const [open, setOpen] = useState(false);
   const [load, setLoad] = useState(false)
   const [data, setData] = useState([])
   const [messageApi, contextHolder] = message.useMessage();
@@ -52,10 +54,7 @@ const Dashboard = () => {
         }
       } catch (error) {
         setLoad(false)
-        messageApi.open({
-          type: 'error',
-          content: error.message,
-        })
+        setOpen(true)
       }
     }
   }, [])
@@ -80,6 +79,21 @@ const Dashboard = () => {
     navigate('/lawyer/category')
   }
 
+  const handleOk = () => {
+    setOpen(false);
+    clearData('accessToken')
+    clearData('userId')
+    dispatch({type: 'CLEAR_TOKEN'})
+  }
+
+  const handleCancel = () => {
+    setOpen(false);
+    clearData('accessToken')
+    clearData('userId')
+    dispatch({type: 'CLEAR_TOKEN'})
+  }
+
+
   return (
     <>
       {contextHolder}
@@ -91,6 +105,16 @@ const Dashboard = () => {
           <News datas={data} />
         </div>
       </Master>
+      <Modal
+          title={"Session Expired"}
+          open={open}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+
+        <h2>Session Expired. Please Login</h2>
+        </Modal>
+
       {load && 
         <div className="absolute inset-0 flex justify-center items-center z-[9999] bg-gray-400 bg-opacity-75">
           <Spin size="large" />

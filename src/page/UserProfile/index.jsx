@@ -6,6 +6,10 @@ import Master from "../../layout/master"
 import { ListProfiles } from '../../component';
 import { clearData } from '../../util/LocalStorage';
 import { message } from 'antd';
+import axios from "axios";
+
+
+const URL_USERS = import.meta.env.VITE_BE_ENDPOINT_USERS
 
 const UserProfile = () => {
   const profile = useSelector(state => state.profiles.profile);
@@ -28,6 +32,38 @@ const UserProfile = () => {
       dispatch({type: 'CLEAR_TOKEN'})
       navigate('/',{ replace: true })
     }, '2000');
+  }
+
+  const userPremium = async (e) => {
+    e.preventDefault()
+    const tokens = JSON.parse(localStorage.getItem('accessToken'));
+    try {
+      const res = await axios.put(
+        `${URL_USERS}/premium`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${tokens}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if(res.status === 200) {
+        dispatch({type: 'ADD_PROFILE', payload: res.data.data})
+        messageApi.open({
+          type: 'success',
+          content: res.data.message,
+        })
+      }
+
+    } catch (error) {
+      messageApi.open({
+        type: 'error',
+        content: error.message,
+      })
+    }
+   
   }
 
   return (
@@ -90,9 +126,9 @@ const UserProfile = () => {
                       disabled={true}
                     />
                   </div>
-                </div>
-                <ListProfiles title={"Signout"} onCLick={(e) => logout(e)} />
+                </div>         
               </div>
+              <ListProfiles titleOut={"Signout"} titlePremium={"Go Premium"} onCLickLogout={(e) => logout(e)} onClickPre={(e) => userPremium(e)} />
             </div>
           </div>
         </div>
