@@ -9,6 +9,8 @@ import Breadcrumb from '../../layout/breadcrumb';
 import axios from "axios";
 import { Spin, message } from 'antd';
 import { storeData } from '../../util/LocalStorage';
+import { Avatar } from "antd";
+import { EyeOutlined, EyeInvisibleOutlined  } from '@ant-design/icons';
 
 const URL_AUTH = import.meta.env.VITE_BE_ENDPOINT_AUTH
 
@@ -18,11 +20,16 @@ const SignIn = () => {
 
   const [load, setLoad] = useState(false)
   const [messageApi, contextHolder] = message.useMessage();
+  const [visible, setVisible] = useState(false);
 
 
   const onPrev = e => {
     e.preventDefault()
     navigate(-1)
+  }
+
+  const onShowPW = () => {
+    setVisible(!visible)
   }
 
   const initialValues = {
@@ -112,13 +119,22 @@ const SignIn = () => {
                 >
                   Password
                 </label>
-                <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="password"
-                  type="password"
-                  value={formMik.values.password || ''}
-                  onChange={formMik.handleChange('password')}		
-                />
+                <div className="pw-section flex items-center">
+                  <div className="pw-input flex-1">
+                    <input
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="password"
+                      type={visible ? 'text' : 'password'}
+                      value={formMik.values.password || ''}
+                      onChange={formMik.handleChange('password')}		
+                    />
+                  </div>
+                  <div className="pw-icons flex-none -ml-8" onClick={() => onShowPW()}>
+                    <Avatar size={25} icon={ visible ? <EyeOutlined /> : <EyeInvisibleOutlined /> } />
+                  </div>
+
+                </div>
+
                 { formMik.errors.password && (
                     <p className="text-red-500 text-base text-left italic">{formMik.errors.password}</p>
                 )}  
