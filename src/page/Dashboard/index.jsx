@@ -9,7 +9,8 @@ import { clearData } from '../../util/LocalStorage';
 
 
 const URL_NEWS = import.meta.env.VITE_BE_ENDPOINT_NEWS
-const URL_PROFILE = import.meta.env.VITE_BE_ENDPOINT_PROFILE
+const URL_USERS = import.meta.env.VITE_BE_ENDPOINT_USERS
+const URL_SPECIAL = import.meta.env.VITE_BE_ENDPOINT_SPECIAL
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -19,6 +20,7 @@ const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState(false)
   const [data, setData] = useState([])
+  const [dataSpecial, setDataSpecial] = useState([])
   const [messageApi, contextHolder] = message.useMessage();
 
   const getNew = useCallback(async () => {
@@ -38,11 +40,28 @@ const Dashboard = () => {
     }
   }, [])
 
+  const getSpecial = useCallback(async () => {
+    try {
+      setLoad(true)
+      const res = await axios.get(`${URL_SPECIAL}`)
+      if(res.status === 200) {
+        setLoad(false)
+        setDataSpecial(res.data.data.specializations)
+      }
+    } catch (error) {
+      setLoad(false)
+      messageApi.open({
+        type: 'error',
+        content: error.message,
+      })
+    }
+  }, [])
+
   const checkGlobalStates = useCallback( async () => {
     if(profile.id === null || profile.id === '') {
       const tokens = JSON.parse(localStorage.getItem('accessToken'));
       try {
-        const res = await axios.get(`${URL_PROFILE}`, {
+        const res = await axios.get(`${URL_USERS}/profile`, {
           headers: {
             Authorization: `Bearer ${tokens}`,
             'Content-Type': 'application/json',
@@ -59,6 +78,9 @@ const Dashboard = () => {
     }
   }, [])
 
+  useEffect(() => { 
+    getSpecial()
+  }, [])
 
   useEffect(() => { 
     checkGlobalStates()
@@ -74,9 +96,8 @@ const Dashboard = () => {
     navigate('/lawyer/profile')
   }
 
-  const lawyerCategory = e => { 
-    e.preventDefault()
-    navigate('/lawyer/category')
+  const lawyerCategory = (catId) => { 
+    navigate(`/lawyer/category/${catId}`)
   }
 
   const handleOk = () => {
@@ -100,7 +121,7 @@ const Dashboard = () => {
       <Master type={"navbar"}>
         <div className="content px-4 overflow-y-auto h-full">
           <Users name={profile.name} job={"Backend Engineer"}/>
-          <Sliders onCLick={e => lawyerCategory(e)} />
+          <Sliders dataSpecials={dataSpecial} onCLick={(id) => lawyerCategory(id)} />
           <TopRatedLawyer onClick={e => lawyerProfile(e)} />
           <News datas={data} />
         </div>

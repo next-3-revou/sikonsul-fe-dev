@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ListSlider } from "../../../component";
 
-const Sliders = ({onCLick}) => {
+const Sliders = ({ onCLick, dataSpecials }) => {
 
   const settings = {
     dots: true,
@@ -20,11 +21,12 @@ const Sliders = ({onCLick}) => {
     <div className="slider-container slide-section content-section">
       <h2 className="text-black text-xl text-left font-semibold pb-4">What consultation do you want today ?</h2>
       <Slider {...settings}>
-        <ListSlider title={"Hukum Kontrak"} onClick={onCLick} />
-        <ListSlider title={"Hukum Bisnis"} onClick={onCLick} />
-        <ListSlider title={"Hukum Properti"} onClick={onCLick} />
-        <ListSlider title={"Hukum Kontra"} onClick={onCLick} />
-        <ListSlider title={"Hukum Pidana"} onClick={onCLick} />
+        { dataSpecials.map((cur, i) => {
+            return (
+              <ListSlider key={i} title={cur.name} onClick={() => onCLick(cur.id)} />
+            )
+          })
+        }
       </Slider>
     </div>
   )
