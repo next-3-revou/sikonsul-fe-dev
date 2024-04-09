@@ -1,8 +1,48 @@
-# React + Vite
+# SiKonsul Consultation Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to SiKonsul Law Application! This application provides a platform for users to seek legal advice and consultation from experienced attorneys through online channels. Whether you're facing a legal issue or simply need guidance on a matter, our platform connects you with qualified professionals to address your concerns effectively.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **User Registration and Authentication** : Users can create accounts and securely log in to the platform to access consultation services.
+- **Virtual and Live Chat Consultations** : Conduct consultations via live chat to discuss legal matters remotely.
+- **Admin Dashboard** : Admins have access to a dashboard to manage users, lawyers, and overall platform operations.
+
+## Technologies Used
+
+- **Frontend**: HTML, CSS, JavaScript, Vite React.js
+- **Backend**: Node.js, Express.js, MongoDB, Firebase
+- **Authentication**: JSON Web Tokens (JWT)
+- **Deployment**: Netlify, Cyclic
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm installed on your machine
+- MongoDB for database storage
+
+### Installation
+
+1. Clone the repository:
+```
+git clone https://github.com/next-3-revou/sikonsul-fe-dev.git
+```
+
+2. Install dependencies::
+```
+cd sikonsul-fe-dev
+npm install
+```
+
+3. Run the application::
+```
+npm run dev
+```
+
+4. Access the application at `localhost:5173` in your browser
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit pull requests or open issues for any enhancements or bug fixes.
+
