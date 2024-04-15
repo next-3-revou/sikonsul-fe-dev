@@ -11,6 +11,7 @@ import { clearData } from '../../util/LocalStorage';
 const URL_NEWS = import.meta.env.VITE_BE_ENDPOINT_NEWS
 const URL_USERS = import.meta.env.VITE_BE_ENDPOINT_USERS
 const URL_SPECIAL = import.meta.env.VITE_BE_ENDPOINT_SPECIAL
+const URL_LIST_LAWYERS = import.meta.env.VITE_BE_ENDPOINT_LIST_LAWYERS
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -21,6 +22,7 @@ const Dashboard = () => {
   const [load, setLoad] = useState(false)
   const [data, setData] = useState([])
   const [dataSpecial, setDataSpecial] = useState([])
+  const [dataLawyers, setDataLawyers] = useState([])
   const [messageApi, contextHolder] = message.useMessage();
 
   const getNew = useCallback(async () => {
@@ -57,6 +59,23 @@ const Dashboard = () => {
     }
   }, [])
 
+  const getTopLawyers = useCallback(async () => {
+    try {
+      setLoad(true)
+      const res = await axios.get(`${URL_LIST_LAWYERS}`)
+      if(res.status === 200) {
+        setLoad(false)
+        setDataLawyers(res.data.data.lawyers)
+      }
+    } catch (error) {
+      setLoad(false)
+      messageApi.open({
+        type: 'error',
+        content: error.message,
+      })
+    }
+  }, [])
+
   const checkGlobalStates = useCallback( async () => {
     if(profile.id === null || profile.id === '') {
       const tokens = JSON.parse(localStorage.getItem('accessToken'));
@@ -78,6 +97,11 @@ const Dashboard = () => {
     }
   }, [])
 
+  useEffect(() => {
+   getTopLawyers()
+  }, [])
+  
+
   useEffect(() => { 
     getSpecial()
   }, [])
@@ -91,9 +115,8 @@ const Dashboard = () => {
   }, [getNew])  
   
 
-  const lawyerProfile = e => {
-    e.preventDefault()
-    navigate('/lawyer/profile')
+  const lawyerProfile = idLawyer => {
+    navigate(`/lawyer/profile/${idLawyer}`)
   }
 
   const lawyerCategory = (catId) => { 
@@ -122,7 +145,7 @@ const Dashboard = () => {
         <div className="content px-4 overflow-y-auto h-full">
           <Users name={profile.name} job={"Backend Engineer"}/>
           <Sliders dataSpecials={dataSpecial} onCLick={(id) => lawyerCategory(id)} />
-          <TopRatedLawyer onClick={e => lawyerProfile(e)} />
+          <TopRatedLawyer dataLawyers={dataLawyers} onClick={ids => lawyerProfile(ids)} />
           <News datas={data} />
         </div>
       </Master>
