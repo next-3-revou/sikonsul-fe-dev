@@ -127,14 +127,14 @@ const Dashboard = () => {
         </div>
       </Master>
       <Modal
-          title={"Session Expired"}
-          open={open}
-          onOk={handleOk}
-          onCancel={handleCancel}
-        >
+        title={"Session Expired"}
+        open={open}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
 
         <h2>Session Expired. Please Login</h2>
-        </Modal>
+      </Modal>
 
       {load && 
         <div className="absolute inset-0 flex justify-center items-center z-[9999] bg-gray-400 bg-opacity-75">

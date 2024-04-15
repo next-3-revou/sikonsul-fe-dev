@@ -1,11 +1,12 @@
+/* eslint-disable react/prop-types */
 import { Avatar} from "antd";
 import { UserOutlined } from '@ant-design/icons';
 
-const ListNews = (data) => {
-  const { title, date } = data;
+const ListNews = ({ title, date, onClick }) => {
+
   return (
     <div className="list-news py-2">
-      <div className="list-news-wrapper flex justify-between items-center">
+      <div className="list-news-wrapper flex justify-between items-center cursor-pointer" onClick={onClick}>
         <div className="news-headline flex flex-col">
           <div className="news-title">
             <h2 className="text-black text-lg text-left">{title}</h2>

@@ -3,6 +3,11 @@
 import { ListNews } from '../../../component'
 
 const News = ({datas}) => {
+
+  const handleNewsClick = (articleUrl) => {
+    window.open(articleUrl, '_blank');
+  };
+
   return (
     <div className="content-section">
       <div className="content-title pb-6">
@@ -11,15 +16,10 @@ const News = ({datas}) => {
       {datas.length > 0 &&
         datas.map((data, index) => { 
           return (
-            <ListNews key={index} title={data.title} date={data.publishedAt} />
+            <ListNews key={index} title={data.title} date={data.publishedAt} onClick={()=>handleNewsClick(data.url)} />
           )
         })
-        
-
       }
-      {/* <ListNews title={"Mengenal Probono dan Manfaatnya"} date={"today"} />
-      <ListNews title={"Langkah hukum ketika di PHK massal"} date={"today"} />
-      <ListNews title={"Peran MK dalam gugat sengketa"} date={"today"} /> */}
     </div>
   )
 }
