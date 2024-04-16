@@ -5,7 +5,7 @@ const initialState = {
     email: '',
     nik: '',  
     occupation: '',
-    isPremium: ''
+    isPremium: false
   }
 
 };

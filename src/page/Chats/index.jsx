@@ -13,6 +13,7 @@ import {
 } from "firebase/database";
 import { DB } from "../../config";
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Master from "../../layout/master"
 import { Button, message } from 'antd';
 import { SendOutlined } from '@ant-design/icons';
@@ -22,9 +23,12 @@ import { chatDate, chatTime } from "../../util/DateTime";
 import {ListChats} from '../../component'
 
 const Chats = () => {
-  let { lawyerId } = useParams();
-  let userId = 'abcd';
+  let { lawyerId, lawyerName } = useParams();
   const navigate = useNavigate()
+  const profile = useSelector(state => state.profiles.profile);
+
+  let userId = profile.id;
+  let cleanLawyerName = lawyerName.replace(/-/g, " ");
 
   const [messageApi, contextHolder] = message.useMessage();
   const [chatContent, setChatContent] = useState("");
@@ -98,8 +102,8 @@ const Chats = () => {
       lastChatDate: today.getTime(),
       uidPartner: lawyerId,
       uidSender: userId,
-      senderName: userId,
-      partnerName: 'tes lawyer',
+      senderName: profile.name,
+      partnerName: cleanLawyerName,
       status: true
     };
 
@@ -108,8 +112,8 @@ const Chats = () => {
       lastChatDate: today.getTime(),
       uidPartner: userId,
       uidSender: lawyerId,
-      senderName: 'tes lawyer',
-      partnerName: userId,
+      senderName: cleanLawyerName,
+      partnerName: profile.name,
       status: true
     };
 

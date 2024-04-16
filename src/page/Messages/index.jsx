@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
 import Master from "../../layout/master";
 import { ListMessages } from "../../component";
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +12,8 @@ import { message } from "antd";
 
 const Messages = () => {
   const navigate = useNavigate()
-  let userId = 'abcd';
+  const profile = useSelector(state => state.profiles.profile);  
+  let userId = profile.id;
 
   const [messages, setMessages] = useState([]);
   const [mounted, setMounted] = useState(true);
@@ -61,9 +63,10 @@ const Messages = () => {
   })
   
 
-  const chatLawyer = (e, idLawyer) => {
+  const chatLawyer = (e, idLawyer, lawyerName) => {
     e.preventDefault()
-    navigate(`/lawyer/${idLawyer}/chat`)
+    let nameUrl = lawyerName.replace(/\s+/g, '-')
+    navigate(`/lawyer/${idLawyer}/chat/${nameUrl}`)
   }
 
   return (
@@ -77,7 +80,7 @@ const Messages = () => {
           {messages.length > 0 &&
             messages.map((cur, key) => {
               return (
-                <ListMessages key={key} title={cur.data[2].data} specialization={cur.data[1].data} onCLick={(e) => chatLawyer(e, cur.data[5].data)} />
+                <ListMessages key={key} title={cur.data[2].data} specialization={cur.data[1].data} onCLick={(e) => chatLawyer(e, cur.data[5].data, cur.data[2].data)} />
               )
             })
           }

@@ -7,9 +7,9 @@ import Lock from '../../../uploads/padlock.png'
 
 
 
-const ListCategoryLawyer = ({ idLawyer, name, onClick, isPremium }) => {
+const ListCategoryLawyer = ({ idLawyer, name, onClick, isPremium, userStatus }) => {
   return (
-    <div className="category-lawyer flex justify-between items-center border-b-2 border-[#EEEEEE] py-5 cursor-pointer" onClick={() => onClick(idLawyer, isPremium)}>
+    <div className="category-lawyer flex justify-between items-center border-b-2 border-[#EEEEEE] py-5 cursor-pointer" onClick={() => onClick(idLawyer, isPremium, name)}>
       <div className="category-lawyer-info flex items-center">
         <div className="category-lawyer-avatar">
           <Avatar size={52} icon={<UserOutlined />} />
@@ -20,7 +20,7 @@ const ListCategoryLawyer = ({ idLawyer, name, onClick, isPremium }) => {
       </div>
 
       <div className="category-lawyer-chevron">
-        <img src={isPremium ? Lock : RightChevron} className='w-6 h-6' alt="" />
+        <img src={(isPremium && userStatus === false) || (isPremium && userStatus === undefined) ? Lock : RightChevron} className='w-6 h-6' alt="" />
       </div>
     </div>
   )
