@@ -128,7 +128,7 @@ const UserProfile = () => {
                   </div>
                 </div>         
               </div>
-              <ListProfiles titleOut={"Signout"} titlePremium={"Go Premium"} onCLickLogout={(e) => logout(e)} onClickPre={(e) => userPremium(e)} />
+              <ListProfiles isPremium={profile.isPremium} titleOut={"Signout"} titlePremium={"Go Premium"} onCLickLogout={(e) => logout(e)} onClickPre={(e) => userPremium(e)} />
             </div>
           </div>
         </div>

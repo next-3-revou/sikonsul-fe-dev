@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Master from '../../layout/master'
 import Breadcrumb from "../../layout/breadcrumb";
@@ -10,9 +11,10 @@ const URL_LAWYERS = import.meta.env.VITE_BE_ENDPOINT_LAWYERS
 
 
 const CategoryLawyer = () => {
-  let lawyerId = 'abcde';
+  
   let { catID } = useParams();
   const navigate = useNavigate()
+  const profile = useSelector(state => state.profiles.profile);
 
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -46,17 +48,19 @@ const CategoryLawyer = () => {
     navigate(-1)
   }
 
-  const chatLawyer = (idLawyers, isPremium) => {
+  const chatLawyer = (idLawyers, isPremium, lawyerName) => {
     const userStatus = false
+    let cleanDot = lawyerName.replace(/\./g, "")
+    let nameUrl = cleanDot.replace(/\s+/g, '-')
 
     if(isPremium && userStatus === true){
-      navigate(`/lawyer/${lawyerId}/chat`)
+      navigate(`/lawyer/${idLawyers}/chat/${nameUrl}`)
     } else if(isPremium && userStatus === false) {
       setOpen(true)
     } else if(isPremium === false && userStatus === false) {
-      navigate(`/lawyer/${lawyerId}/chat`)
+      navigate(`/lawyer/${idLawyers}/chat/${nameUrl}`)
     } else if(isPremium === false && userStatus === true) {
-      navigate(`/lawyer/${lawyerId}/chat`)
+      navigate(`/lawyer/${idLawyers}/chat/${nameUrl}`)
     }
     
   }
@@ -74,12 +78,12 @@ const CategoryLawyer = () => {
     <>
       {contextHolder}
       <Master>
-        <div className="content px-4">
+        <div className="content px-4 overflow-y-auto">
           <Breadcrumb title={"Pilih Lawyer"} onClick={e => onPrev(e)} type={"category"} />
           <div className="content-wrapper py-12 overflow-y-auto">
             { data.map((cur, id) => {
               return (
-                <ListCategoryLawyer key={id} idLawyer={cur.id} name={cur.name} isPremium={cur.isPremium} onClick={(id, premiStatus) => chatLawyer(id, premiStatus)} />
+                <ListCategoryLawyer key={id} idLawyer={cur.id} name={cur.name} userStatus={profile.isPremium} isPremium={cur.isPremium} onClick={(id, premiStatus) => chatLawyer(id, premiStatus, cur.name)} />
               )
             })
               
