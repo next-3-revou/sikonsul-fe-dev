@@ -5,6 +5,7 @@ import { LogoutOutlined, UnlockOutlined  } from '@ant-design/icons';
 import { createUUID } from "../../../util/UniqueKey";
 
 const ListProfiles = ({ titleOut, isPremium, titlePremium, onCLickLogout, onClickPre }) => {
+  // console.log(isPremium)
   return (
     <div key={createUUID} className="category-lawyer flex justify-between items-center border-b-2 border-[#EEEEEE] cursor-pointer">
       <div className="category-lawyer-info flex"  onClick={onCLickLogout}>
@@ -15,7 +16,7 @@ const ListProfiles = ({ titleOut, isPremium, titlePremium, onCLickLogout, onClic
           <h2 className="text-black text-xl text-left">{titleOut}</h2>
         </div>
       </div>
-      {isPremium === false || isPremium === undefined &&
+      {isPremium === false | isPremium === undefined &&
         <div className="category-lawyer-info flex" onClick={onClickPre}>
           <div className="category-lawyer-avatar">
             <Avatar size={40} icon={<UnlockOutlined />} />

@@ -28,13 +28,14 @@ const profileReducer = (state = initialState, action) => {
 
     case 'CLEAR_PROFILE':
       return {
-        initialState,
-      };
+        ...state
+      }
       
     default:
-      break;
+      return {
+        ...state
+      }
   }
-  return state;
 };
 
 export default profileReducer;

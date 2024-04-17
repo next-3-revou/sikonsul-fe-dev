@@ -143,7 +143,7 @@ const Dashboard = () => {
       {contextHolder}
       <Master type={"navbar"}>
         <div className="content px-4 overflow-y-auto h-full">
-          <Users name={profile.name} job={"Backend Engineer"}/>
+          <Users name={(profile.name !== undefined) || (profile.name !== undefined) ? profile.name : ""} job={"Backend Engineer"}/>
           <Sliders dataSpecials={dataSpecial} onCLick={(id) => lawyerCategory(id)} />
           <TopRatedLawyer dataLawyers={dataLawyers} onClick={ids => lawyerProfile(ids)} />
           <News datas={data} />
