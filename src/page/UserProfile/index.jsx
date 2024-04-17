@@ -30,6 +30,7 @@ const UserProfile = () => {
 
     setTimeout(() => {
       dispatch({type: 'CLEAR_TOKEN'})
+      dispatch({type: 'CLEAR_PROFILE'})
       navigate('/',{ replace: true })
     }, '2000');
   }
