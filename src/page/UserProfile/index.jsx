@@ -80,7 +80,7 @@ const UserProfile = () => {
                 </div>
                 <div className="lawyer-profile-info-detail-identity">
                   <h2 className="text-black text-xl text-center font-semibold">{profile.name}</h2>
-                  <h2 className="text-[#7D8797] text-base text-center">Backend Engineer</h2>
+                  <h2 className="text-[#7D8797] text-base text-center">{profile.occupation}</h2>
                 </div>
               </div>
               <div className="lawyer-profile-info-detail my-10">
@@ -123,7 +123,7 @@ const UserProfile = () => {
                     <input
                       className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                       type="text"
-                      value={"Backend Engineer"}
+                      value={profile.occupation}
                       disabled={true}
                     />
                   </div>
