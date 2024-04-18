@@ -67,6 +67,7 @@ const CategoryLawyer = () => {
 
   const handleOk = () => {
     setOpen(false);
+    navigate('/profile')
   }
 
   const handleCancel = () => {

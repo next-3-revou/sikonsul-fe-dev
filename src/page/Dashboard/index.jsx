@@ -127,6 +127,7 @@ const Dashboard = () => {
     setOpen(false);
     clearData('accessToken')
     clearData('userId')
+    dispatch({type: 'CLEAR_PROFILE'})
     dispatch({type: 'CLEAR_TOKEN'})
   }
 
@@ -134,6 +135,7 @@ const Dashboard = () => {
     setOpen(false);
     clearData('accessToken')
     clearData('userId')
+    dispatch({type: 'CLEAR_PROFILE'})
     dispatch({type: 'CLEAR_TOKEN'})
   }
 
@@ -143,7 +145,7 @@ const Dashboard = () => {
       {contextHolder}
       <Master type={"navbar"}>
         <div className="content px-4 overflow-y-auto h-full">
-          <Users name={(profile.name !== undefined) || (profile.name !== undefined) ? profile.name : ""} job={"Backend Engineer"}/>
+          <Users name={(profile.name !== undefined) || (profile.name !== undefined) ? profile.name : ""} job={(profile.occupation !== undefined) || (profile.occupation !== undefined) ? profile.occupation : ""}/>
           <Sliders dataSpecials={dataSpecial} onCLick={(id) => lawyerCategory(id)} />
           <TopRatedLawyer dataLawyers={dataLawyers} onClick={ids => lawyerProfile(ids)} />
           <News datas={data} />

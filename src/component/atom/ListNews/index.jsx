@@ -12,7 +12,7 @@ const ListNews = ({ title, date, onClick }) => {
             <h2 className="text-black text-lg text-left">{title}</h2>
           </div>
           <div className="news-date">
-            <h2 className="text-[#7D8797] text-base text-left">{date}</h2>
+            <h2 className="text-[#7D8797] text-sm text-left max-w-20">{date}</h2>
           </div>
         </div>
         <div className="news-thumb">
