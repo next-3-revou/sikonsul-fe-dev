@@ -7,8 +7,8 @@ import { createUUID } from "../../../util/UniqueKey";
 const ListProfiles = ({ titleOut, isPremium, titlePremium, onCLickLogout, onClickPre }) => {
   // console.log(isPremium)
   return (
-    <div key={createUUID} className="category-lawyer flex justify-between items-center border-b-2 border-[#EEEEEE] cursor-pointer">
-      <div className="category-lawyer-info flex"  onClick={onCLickLogout}>
+    <div key={createUUID} className="category-lawyer flex justify-between items-center border-[#EEEEEE]">
+      <div className="category-lawyer-info flex cursor-pointer"  onClick={onCLickLogout}>
         <div className="category-lawyer-avatar">
           <Avatar size={40} icon={<LogoutOutlined />} />
         </div>
@@ -17,7 +17,7 @@ const ListProfiles = ({ titleOut, isPremium, titlePremium, onCLickLogout, onClic
         </div>
       </div>
       {isPremium === false | isPremium === undefined &&
-        <div className="category-lawyer-info flex" onClick={onClickPre}>
+        <div className="category-lawyer-info flex cursor-pointer" onClick={onClickPre}>
           <div className="category-lawyer-avatar">
             <Avatar size={40} icon={<UnlockOutlined />} />
           </div>
