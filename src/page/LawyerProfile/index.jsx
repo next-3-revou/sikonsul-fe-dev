@@ -119,7 +119,7 @@ const LawyerProfile = () => {
                       className="block text-[#7D8797] text-lg font-normal mb-2 text-left"
                       htmlFor="fullname"
                     >
-                      STR Number
+                      KTPA Number
                     </label>
                     <input
                       className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
@@ -138,7 +138,7 @@ const LawyerProfile = () => {
                     <input
                       className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                       type="text"
-                      value={(profile.profile.length > 0) ? profile.profile[0].experience : ''}
+                      value={(profile.profile.length > 0) ? ((profile.profile[0].experience === '') || (profile.profile[0].experience === null) ? '10 Years For Law Specialization' : profile.profile.experience )  : ''}
                       disabled={true}
                     />
                   </div>                              
