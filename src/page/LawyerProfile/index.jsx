@@ -1,14 +1,39 @@
-// import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Avatar } from "antd";
 import { UserOutlined } from '@ant-design/icons';
 import Master from "../../layout/master"
 import { Buttons } from "../../component";
 import Breadcrumb from "../../layout/breadcrumb";
+import axios from "axios";
+
+const URL_LAWYERS = import.meta.env.VITE_BE_ENDPOINT_LIST_LAWYERS
 
 const LawyerProfile = () => {
-  let lawyerId = 'abcde';
+  // let lawyerId = 'abcde';
+  let { lawyerId } = useParams();
   const navigate = useNavigate()
+
+  const getProfileLawyer = useCallback(async () => { 
+    const tokens = JSON.parse(localStorage.getItem('accessToken'));
+    try {
+
+      const res = await axios.get(`${URL_LAWYERS}/profile/${lawyerId}`, {
+        headers: {
+          Authorization: `Bearer ${tokens}`,
+          'Content-Type': 'application/json',
+        }
+      })
+      console.log(res)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }, [])
+
+  useEffect(() => {
+    getProfileLawyer()
+  }, [])
+  
 
   const onPrev = e => {
     e.preventDefault()
