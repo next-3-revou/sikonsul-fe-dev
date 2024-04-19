@@ -45,7 +45,7 @@ npm run dev
 ## Deployment
 This project succsfully deployed at Netlify<br>
 You can access using this link<br>
-> [SIKonsul](https://sikonsul.netlfy.com)
+> [SIKonsul](https://sikonsul.netlify.com)
 
 ## Additional Repo
 This project have dependency with several repo for Lawyer side and Backend ( API ). You can check the repos at <br>
