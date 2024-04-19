@@ -42,6 +42,11 @@ npm run dev
 
 4. Access the application at `localhost:5173` in your browser
 
+## Deployment
+This project succsfully deployed at Netlify<br>
+You can access using this link<br>
+> [SIKonsul](https://sikonsul.netlfy.com)
+
 ## Additional Repo
 This project have dependency with several repo for Lawyer side and Backend ( API ). You can check the repos at <br>
 ### Lawyer Apps
