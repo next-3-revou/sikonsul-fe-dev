@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-key */
-// import React from 'react'
 import { 
   useEffect, 
   useState,
@@ -163,7 +162,7 @@ const Chats = () => {
       {contextHolder}
       <Master>
         <div className="content h-full px-4">
-          <Breadcrumb type={"chat"} title={"Tes"} onClick={e => onPrev(e)}/>
+          <Breadcrumb type={"chat"} title={cleanLawyerName} onClick={e => onPrev(e)}/>
           <div className="chat-wrapper h-full">
             <div className="chat-elem h-full flex flex-col justify-between">
               <div className="chat-content h-full mt-4 overflow-y-auto">

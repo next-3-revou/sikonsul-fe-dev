@@ -42,6 +42,14 @@ npm run dev
 
 4. Access the application at `localhost:5173` in your browser
 
+## Additional Repo
+This project have dependency with several repo for Lawyer side and Backend ( API ). You can check the repos at <br>
+### Lawyer Apps
+> https://github.com/next-3-revou/sikonsul-lawyer-dev
+
+### Backend (API)
+> https://github.com/EOA03/SiKonsul_BE
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit pull requests or open issues for any enhancements or bug fixes.
