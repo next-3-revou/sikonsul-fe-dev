@@ -28,12 +28,28 @@ const profileReducer = (state = initialState, action) => {
 
     case 'CLEAR_PROFILE':
       return {
-        ...state
+        ...state,
+        profile: {
+          id: '',
+          name: '',
+          email: '',
+          nik: '',  
+          occupation: '',
+          isPremium: false
+        }
       }
       
     default:
       return {
-        ...state
+        ...state,
+        profile: {
+          id: '',
+          name: '',
+          email: '',
+          nik: '',  
+          occupation: '',
+          isPremium: false
+        }
       }
   }
 };
