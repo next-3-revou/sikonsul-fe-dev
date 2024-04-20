@@ -76,7 +76,7 @@ const Dashboard = () => {
     }
   }, [])
 
-  const checkGlobalStates = useCallback( async () => {
+  const getUserProfile = async () => {
     const tokens = JSON.parse(localStorage.getItem('accessToken'));
     try {
       const res = await axios.get(`${URL_USERS}/profile`, {
@@ -93,7 +93,7 @@ const Dashboard = () => {
       setLoad(false)
       setOpen(true)
     }
-  }, [])
+  }
 
   useEffect(() => {
    getTopLawyers()
@@ -105,7 +105,7 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => { 
-    checkGlobalStates()
+   getUserProfile()
   }, [])
 
   useEffect(() => {
@@ -126,6 +126,7 @@ const Dashboard = () => {
     clearData('accessToken')
     clearData('userId')
     dispatch({type: 'CLEAR_PROFILE'})
+    dispatch({type: 'CLEAR_PROFILE_LAWYER'})
     dispatch({type: 'CLEAR_TOKEN'})
   }
 
@@ -134,6 +135,7 @@ const Dashboard = () => {
     clearData('accessToken')
     clearData('userId')
     dispatch({type: 'CLEAR_PROFILE'})
+    dispatch({type: 'CLEAR_PROFILE_LAWYER'})
     dispatch({type: 'CLEAR_TOKEN'})
   }
 

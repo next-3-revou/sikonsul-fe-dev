@@ -24,7 +24,7 @@ import {ListChats} from '../../component'
 const Chats = () => {
   let { lawyerId, lawyerName } = useParams();
   const navigate = useNavigate()
-  const profile = useSelector(state => state.profiles.profile);
+  const profileUser = useSelector(state => state.profiles.profile);
 
   const userId = JSON.parse(localStorage.getItem('userId'));
   let cleanLawyerName = lawyerName.replace(/-/g, " ");
@@ -101,7 +101,7 @@ const Chats = () => {
       lastChatDate: today.getTime(),
       uidPartner: lawyerId,
       uidSender: userId,
-      senderName: profile.name,
+      senderName: profileUser.name,
       partnerName: cleanLawyerName,
       status: true
     };
@@ -112,7 +112,7 @@ const Chats = () => {
       uidPartner: userId,
       uidSender: lawyerId,
       senderName: cleanLawyerName,
-      partnerName: profile.name,
+      partnerName: profileUser.name,
       status: true
     };
 
@@ -161,6 +161,7 @@ const Chats = () => {
     <>
       {contextHolder}
       <Master>
+        {console.log(profileUser)}
         <div className="content h-full px-4">
           <Breadcrumb type={"chat"} title={cleanLawyerName} onClick={e => onPrev(e)}/>
           <div className="chat-wrapper h-full">

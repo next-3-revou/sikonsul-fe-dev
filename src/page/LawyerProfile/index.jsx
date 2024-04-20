@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Avatar, Spin, message } from "antd";
@@ -21,10 +21,9 @@ const LawyerProfile = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
 
-  const getProfileLawyer = useCallback(async () => {
+  useEffect(() => {
     const tokens = JSON.parse(localStorage.getItem('accessToken'));
-
-    if(profile.id === '' | profile.id === undefined) {
+    const getProfile = async () => {
       try {
         setLoading(true)
         const res = await axios.get(`${URL_LAWYERS}/profile/${lawyerId}`, {
@@ -46,11 +45,10 @@ const LawyerProfile = () => {
         })
       }
     }
-  }, [])
 
-  useEffect(() => {
-    getProfileLawyer()
-  }, [])
+    getProfile()
+   
+  }, [dispatch, lawyerId, messageApi])
   
 
   const onPrev = e => {

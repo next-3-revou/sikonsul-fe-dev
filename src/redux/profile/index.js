@@ -41,15 +41,7 @@ const profileReducer = (state = initialState, action) => {
       
     default:
       return {
-        ...state,
-        profile: {
-          id: '',
-          name: '',
-          email: '',
-          nik: '',  
-          occupation: '',
-          isPremium: false
-        }
+        ...state
       }
   }
 };
