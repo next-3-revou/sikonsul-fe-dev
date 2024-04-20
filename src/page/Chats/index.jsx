@@ -26,7 +26,7 @@ const Chats = () => {
   const navigate = useNavigate()
   const profile = useSelector(state => state.profiles.profile);
 
-  let userId = profile.id;
+  const userId = JSON.parse(localStorage.getItem('userId'));
   let cleanLawyerName = lawyerName.replace(/-/g, " ");
 
   const [messageApi, contextHolder] = message.useMessage();
