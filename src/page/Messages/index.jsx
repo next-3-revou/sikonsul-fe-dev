@@ -12,8 +12,10 @@ import { message } from "antd";
 
 const Messages = () => {
   const navigate = useNavigate()
-  const profile = useSelector(state => state.profiles.profile);  
-  let userId = profile.id;
+  const profile = useSelector(state => state.profiles.profile);
+  console.log(profile)
+
+  const userId = JSON.parse(localStorage.getItem('userId'));
 
   const [messages, setMessages] = useState([]);
   const [mounted, setMounted] = useState(true);
