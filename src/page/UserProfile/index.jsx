@@ -31,6 +31,7 @@ const UserProfile = () => {
     setTimeout(() => {
       dispatch({type: 'CLEAR_TOKEN'})
       dispatch({type: 'CLEAR_PROFILE'})
+      dispatch({type: 'CLEAR_PROFILE_LAWYER'})
       navigate('/',{ replace: true })
     }, '2000');
   }

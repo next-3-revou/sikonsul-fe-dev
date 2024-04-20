@@ -30,7 +30,16 @@ const profileLawyerReducer = (state = initialState, action) => {
 
     case 'CLEAR_PROFILE_LAWYER':
       return {
-        ...state
+        ...state,
+        profileLawyer: {
+          id: '',
+          name: '',
+          email: '',
+          nik: '',  
+          university: '',
+          description: '',  
+          profile: []
+        }
       }
       
     default:
