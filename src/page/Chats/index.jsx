@@ -161,7 +161,6 @@ const Chats = () => {
     <>
       {contextHolder}
       <Master>
-        {console.log(profileUser)}
         <div className="content h-full px-4">
           <Breadcrumb type={"chat"} title={cleanLawyerName} onClick={e => onPrev(e)}/>
           <div className="chat-wrapper h-full">

@@ -76,24 +76,26 @@ const Dashboard = () => {
     }
   }, [])
 
-  const getUserProfile = async () => {
+  const getProfiles = useCallback(async () => {
     const tokens = JSON.parse(localStorage.getItem('accessToken'));
-    try {
-      const res = await axios.get(`${URL_USERS}/profile`, {
-        headers: {
-          Authorization: `Bearer ${tokens}`,
-          'Content-Type': 'application/json',
+    if(profile.id === '' | profile.id === undefined) {
+      try {
+        const res = await axios.get(`${URL_USERS}/profile`, {
+          headers: {
+            Authorization: `Bearer ${tokens}`,
+            'Content-Type': 'application/json',
+          }
+        })
+        if(res.status === 200) {
+          setLoad(false)
+          dispatch({type: 'ADD_PROFILE', payload: res.data.data})
         }
-      })
-      if(res.status === 200) {
+      } catch (error) {
         setLoad(false)
-        dispatch({type: 'ADD_PROFILE', payload: res.data.data})
+        setOpen(true)
       }
-    } catch (error) {
-      setLoad(false)
-      setOpen(true)
     }
-  }
+  }, [dispatch, profile.id])
 
   useEffect(() => {
    getTopLawyers()
@@ -105,8 +107,9 @@ const Dashboard = () => {
   }, [])
 
   useEffect(() => { 
-   getUserProfile()
-  }, [])
+  //  getUserProfile()
+    getProfiles()
+  }, [getProfiles])
 
   useEffect(() => {
     getNew()
