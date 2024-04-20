@@ -77,23 +77,21 @@ const Dashboard = () => {
   }, [])
 
   const checkGlobalStates = useCallback( async () => {
-    if(profile.id === null || profile.id === '') {
-      const tokens = JSON.parse(localStorage.getItem('accessToken'));
-      try {
-        const res = await axios.get(`${URL_USERS}/profile`, {
-          headers: {
-            Authorization: `Bearer ${tokens}`,
-            'Content-Type': 'application/json',
-          }
-        })
-        if(res.status === 200) {
-          setLoad(false)
-          dispatch({type: 'ADD_PROFILE', payload: res.data.data})
+    const tokens = JSON.parse(localStorage.getItem('accessToken'));
+    try {
+      const res = await axios.get(`${URL_USERS}/profile`, {
+        headers: {
+          Authorization: `Bearer ${tokens}`,
+          'Content-Type': 'application/json',
         }
-      } catch (error) {
+      })
+      if(res.status === 200) {
         setLoad(false)
-        setOpen(true)
+        dispatch({type: 'ADD_PROFILE', payload: res.data.data})
       }
+    } catch (error) {
+      setLoad(false)
+      setOpen(true)
     }
   }, [])
 
