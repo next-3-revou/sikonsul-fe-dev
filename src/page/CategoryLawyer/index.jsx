@@ -34,10 +34,11 @@ const CategoryLawyer = () => {
         setData(res.data.data.lawyers)
       }
     } catch (error) {
+      console.log(error)
       setLoading(false)
       messageApi.open({
         type: 'error',
-        content: error.message,
+        content: error.response.data.message,
       })
     }
   }, [])
