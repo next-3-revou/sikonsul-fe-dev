@@ -34,7 +34,6 @@ const CategoryLawyer = () => {
         setData(res.data.data.lawyers)
       }
     } catch (error) {
-      console.log(error)
       setLoading(false)
       messageApi.open({
         type: 'error',
@@ -83,13 +82,19 @@ const CategoryLawyer = () => {
         <div className="content px-4 overflow-y-auto">
           <Breadcrumb title={"Pilih Lawyer"} onClick={e => onPrev(e)} type={"category"} />
           <div className="content-wrapper py-12 overflow-y-auto">
-            { data.map((cur, id) => {
+          { data.length > 0 &&
+            data.map((cur, key) => {
               return (
-                <ListCategoryLawyer key={id} idLawyer={cur.id} name={cur.name} userStatus={profile.isPremium} isPremium={cur.isPremium} onClick={(id, premiStatus) => chatLawyer(id, premiStatus, cur.name)} />
+                <ListCategoryLawyer key={key} idLawyer={cur.id} name={cur.name} userStatus={profile.isPremium} isPremium={cur.isPremium} onClick={(id, premiStatus) => chatLawyer(id, premiStatus, cur.name)} />
               )
             })
-              
-            }
+          }
+
+          { data.length === 0 &&
+            <div className="warning py-5">
+              <h2 className="text-black text-xl">No Lawyer Found</h2>
+            </div>
+          }
           </div>
         </div>
       </Master>
