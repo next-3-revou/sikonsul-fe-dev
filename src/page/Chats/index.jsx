@@ -4,7 +4,7 @@ import { DB } from "../../config";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Master from "../../layout/master";
-import { Button, message } from "antd";
+import { Button, message, Modal } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import "./styles.css";
 import Breadcrumb from "../../layout/breadcrumb";
@@ -23,6 +23,12 @@ const Chats = () => {
   const [chatContent, setChatContent] = useState("");
   const [chats, setChats] = useState([]);
   const [mounted, setMounted] = useState(true);
+  const [sessionStartTime, setSessionStartTime] = useState(null);
+  const [sessionDuration, setSessionDuration] = useState(0.2); // Durasi sesi dalam menit
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [showExtendModal, setShowExtendModal] = useState(false);
+  const [modalCancelled, setModalCancelled] = useState(false);
 
   const AlwaysScrollToBottom = () => {
     const elementRef = useRef();
@@ -64,6 +70,99 @@ const Chats = () => {
       });
     }
   });
+
+  useEffect(() => {
+    const chatIds = `${userId}_${lawyerId}`;
+    const sessionsRef = ref(DB, `chatting/${chatIds}/sessions`);
+
+    onValue(sessionsRef, (snapshot) => {
+      const sessionsData = snapshot.val();
+      if (sessionsData) {
+        const latestSessionId = Object.keys(sessionsData).pop();
+        const latestSessionData = sessionsData[latestSessionId];
+        setSessionStartTime(latestSessionData.sessionStartTime);
+        setSessionDuration(latestSessionData.sessionDuration);
+        setIsSessionActive(true);
+      } else {
+        setIsSessionActive(false);
+      }
+    });
+  }, [userId, lawyerId]);
+
+  useEffect(() => {
+    if (sessionStartTime) {
+      const timer = setInterval(() => {
+        const currentTime = Date.now();
+        const elapsedTime = (currentTime - sessionStartTime) / 1000; // Waktu dalam detik
+        const remainingTime = Math.max(0, sessionDuration * 60 - elapsedTime); // Sisa waktu dalam detik, minimum 0
+
+        setRemainingTime(remainingTime);
+
+        if (remainingTime === 0) {
+          clearInterval(timer);
+          setIsSessionActive(false);
+          Modal.warning({
+            title: "Session Ended",
+            content:
+              "Your chat session has ended. Please start a new session to continue chatting.",
+          });
+        } else if (remainingTime <= 5 && !modalCancelled) {
+          setShowExtendModal(true);
+        }
+      }, 1000);
+
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [sessionStartTime, sessionDuration, modalCancelled]);
+
+  const startChatSession = () => {
+    const currentTime = Date.now();
+    const chatIds = `${userId}_${lawyerId}`;
+    const sessionId = push(ref(DB, `chatting/${chatIds}/sessions`)).key;
+    const sessionRef = ref(DB, `chatting/${chatIds}/sessions/${sessionId}`);
+
+    set(sessionRef, {
+      sessionStartTime: currentTime,
+      sessionDuration: sessionDuration,
+    })
+      .then(() => {
+        setSessionStartTime(currentTime);
+        setIsSessionActive(true);
+        setModalCancelled(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const extendChatSession = () => {
+    const currentTime = Date.now();
+    const chatIds = `${userId}_${lawyerId}`;
+    const sessionId = push(ref(DB, `chatting/${chatIds}/sessions`)).key;
+    const sessionRef = ref(DB, `chatting/${chatIds}/sessions/${sessionId}`);
+
+    set(sessionRef, {
+      sessionStartTime: currentTime,
+      sessionDuration: sessionDuration + 1, // Tambahkan 1 menit ke durasi sesi
+    })
+      .then(() => {
+        setSessionStartTime(currentTime);
+        setSessionDuration(sessionDuration + 1);
+        setIsSessionActive(true);
+        setShowExtendModal(false);
+        setModalCancelled(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const cancelExtendModal = () => {
+    setShowExtendModal(false);
+    setModalCancelled(true);
+  };
 
   const sendChats = (e) => {
     e.preventDefault();
@@ -145,6 +244,14 @@ const Chats = () => {
     navigate(-1);
   };
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
   return (
     <>
       {contextHolder}
@@ -155,8 +262,17 @@ const Chats = () => {
             title={cleanLawyerName}
             onClick={(e) => onPrev(e)}
           />
-          <div className="chat-wrapper h-full">
-            <div className="chat-elem h-full flex flex-col justify-between">
+          <div className="session-info flex justify-end items-center mb-4">
+            <div
+              className={`session-time ${
+                remainingTime <= 5 ? "text-red-500" : "text-green-500"
+              }`}
+            >
+              {formatTime(remainingTime)}
+            </div>
+          </div>
+          <div className="chat-wrapper h-[calc(100%-32px)]">
+            <div className="chat-elem h-[calc(100%-32px)] flex flex-col justify-between">
               <div className="chat-content h-full mt-4 overflow-y-auto">
                 {chats.map((cur, parentKey) => (
                   <div key={parentKey}>
@@ -185,42 +301,68 @@ const Chats = () => {
                 ))}
                 <AlwaysScrollToBottom />
               </div>
-              <div className="chat-input flex justify-around">
-                <div className="chats-area">
-                  <textarea
-                    placeholder="Type your message"
-                    value={chatContent}
-                    onChange={(e) => setChatContent(e.target.value)}
-                    onKeyDown={(e) => onEnterPress(e)}
-                    rows={1}
-                    cols={40}
-                    className="resize-none rounded-md text-black overflow-hidden"
-                  ></textarea>
-                </div>
-                <div className="chat-btn mb-4">
-                  {chatContent.length <= 0 && chatContent === "" && (
-                    <Button
-                      type="primary"
-                      icon={<SendOutlined />}
-                      className="w-12 h-10"
-                      onClick={(e) => sendChats(e)}
-                      disabled
-                    />
-                  )}
-                  {chatContent.length > 0 && (
-                    <Button
-                      type="primary"
-                      icon={<SendOutlined />}
-                      className="w-12 h-10"
-                      onClick={(e) => sendChats(e)}
-                    />
-                  )}
+              <div className="chat-input flex flex-col justify-around">
+                {!isSessionActive && (
+                  <div className="start-session-btn mb-4">
+                    <Button type="primary" onClick={startChatSession} block>
+                      Start Chat Session
+                    </Button>
+                  </div>
+                )}
+                {isSessionActive && (
+                  <div className="extend-session-btn mb-4">
+                    <Button type="default" onClick={extendChatSession} block>
+                      Extend Session
+                    </Button>
+                  </div>
+                )}
+                <div className="input-area flex justify-around">
+                  <div className="chats-area flex-grow mr-2">
+                    <textarea
+                      placeholder="Type your message"
+                      value={chatContent}
+                      onChange={(e) => setChatContent(e.target.value)}
+                      onKeyDown={(e) => onEnterPress(e)}
+                      rows={1}
+                      className="resize-none rounded-md text-black overflow-hidden w-full"
+                      disabled={!isSessionActive}
+                    ></textarea>
+                  </div>
+                  <div className="chat-btn">
+                    {isSessionActive && chatContent.length <= 0 && (
+                      <Button
+                        type="primary"
+                        icon={<SendOutlined />}
+                        className="w-12 h-10"
+                        onClick={(e) => sendChats(e)}
+                        disabled
+                      />
+                    )}
+                    {isSessionActive && chatContent.length > 0 && (
+                      <Button
+                        type="primary"
+                        icon={<SendOutlined />}
+                        className="w-12 h-10"
+                        onClick={(e) => sendChats(e)}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </Master>
+      <Modal
+        title="Extend Session"
+        open={showExtendModal}
+        onOk={extendChatSession}
+        onCancel={cancelExtendModal}
+      >
+        <p>
+          Your chat session is about to end. Do you want to extend the session?
+        </p>
+      </Modal>
     </>
   );
 };
