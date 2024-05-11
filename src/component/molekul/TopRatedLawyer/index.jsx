@@ -4,6 +4,7 @@ import { ListLawyer } from '../../../component';
 
 const TopRatedLawyer = ({ dataLawyers, onClick}) => {
 
+  dataLawyers.sort((a, b) => b.rating - a.rating);
   let sliceLawyer = dataLawyers.slice(0, 3);
 
   return (
@@ -14,7 +15,7 @@ const TopRatedLawyer = ({ dataLawyers, onClick}) => {
       {sliceLawyer.length > 0 &&
         sliceLawyer.map((lawyer, index) => {
           return (
-            <ListLawyer key={index} name={lawyer.name} profileLawyer={lawyer.profile} speciality={lawyer.speciality} rate={lawyer.rate} onClick={() => onClick(lawyer.id)} />
+            <ListLawyer key={index} name={lawyer.name} profileLawyer={lawyer.profile} speciality={lawyer.speciality} rating={lawyer.rating} onClick={() => onClick(lawyer.id)} />
           )
         })
       }
