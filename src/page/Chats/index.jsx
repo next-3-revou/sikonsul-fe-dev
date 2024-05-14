@@ -4,14 +4,17 @@ import { DB } from "../../config";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Master from "../../layout/master";
-import { Button, message, Modal } from "antd";
+import { Button, message, Modal, Rate } from "antd";
 import { SendOutlined } from "@ant-design/icons";
 import "./styles.css";
 import Breadcrumb from "../../layout/breadcrumb";
 import { chatDate, chatTime } from "../../util/DateTime";
 import { ListChats } from "../../component";
+import axios from "axios";
 
 const Chats = () => {
+  const URL_RATING = import.meta.env.VITE_BE_ENDPOINT_RATING;
+  const tokens = JSON.parse(localStorage.getItem("accessToken"));
   let { lawyerId, lawyerName } = useParams();
   const navigate = useNavigate();
   const profileUser = useSelector((state) => state.profiles.profile);
@@ -29,11 +32,35 @@ const Chats = () => {
   const [remainingTime, setRemainingTime] = useState(0);
   const [showExtendModal, setShowExtendModal] = useState(false);
   const [modalCancelled, setModalCancelled] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hasRated, setHasRated] = useState(false);
+  const [showRatingModal, setShowRatingModal] = useState(false);
 
   const AlwaysScrollToBottom = () => {
     const elementRef = useRef();
     useEffect(() => elementRef.current.scrollIntoView({ behavior: "smooth" }));
     return <div ref={elementRef} />;
+  };
+
+  const handleRatingChange = async (value) => {
+    setRating(value);
+    setHasRated(true);
+    message.success(`You rated ${value} stars`);
+  
+    const postData = {
+      lawyerId: parseInt(lawyerId), 
+      rating: value,
+    };
+    try {
+      const response = await axios.post(`${URL_RATING}`,postData,{
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokens}`,
+        },
+      });
+    } catch (error) {
+      console.error('Error submitting rating:', error);
+    }
   };
 
   useEffect(() => {
@@ -101,11 +128,7 @@ const Chats = () => {
         if (remainingTime === 0) {
           clearInterval(timer);
           setIsSessionActive(false);
-          Modal.warning({
-            title: "Session Ended",
-            content:
-              "Your chat session has ended. Please start a new session to continue chatting.",
-          });
+          setShowRatingModal(true);
         } else if (remainingTime <= 5 && !modalCancelled) {
           setShowExtendModal(true);
         }
@@ -351,18 +374,23 @@ const Chats = () => {
               </div>
             </div>
           </div>
+          <Modal
+            title="Session Ended"
+            open={showRatingModal}
+            footer={null}
+            onCancel={() => setShowRatingModal(false)}
+          >
+            <p>
+              Your chat session has ended. Please start a new session to
+              continue chatting.
+            </p>
+            <div className="rating-section mt-2">
+              <h3>Rate Your Chat Experience</h3>
+              <Rate onChange={handleRatingChange} value={rating} />
+            </div>
+          </Modal>
         </div>
       </Master>
-      <Modal
-        title="Extend Session"
-        open={showExtendModal}
-        onOk={extendChatSession}
-        onCancel={cancelExtendModal}
-      >
-        <p>
-          Your chat session is about to end. Do you want to extend the session?
-        </p>
-      </Modal>
     </>
   );
 };
