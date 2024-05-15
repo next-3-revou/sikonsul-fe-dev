@@ -76,7 +76,7 @@ const SignIn = () => {
       setLoad(false);
       messageApi.open({
         type: "error",
-        content: error.message,
+        content: error.response.data.error,
       });
     }
   };
